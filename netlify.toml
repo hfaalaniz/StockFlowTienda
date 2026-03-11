@@ -1,0 +1,14 @@
+[build]
+  # Si conectás Netlify directo a la carpeta tienda/ como raíz del repo,
+  # usá solo estas dos líneas (sin "base"):
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA fallback: rutas desconocidas → index.html (necesario para React Router)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
