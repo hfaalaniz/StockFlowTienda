@@ -17,11 +17,13 @@ La tienda es una SPA (Single Page Application) construida con Vite + React. Se d
 En `c:\stockflow\tienda\` copiá `.env.example` y completá los valores reales.
 **No subas `.env` a git** — las variables se configuran directamente en Netlify (Paso 4).
 
+Además, el proyecto incluye `tienda/.env.production` como plantilla de referencia. En build de Netlify se genera automáticamente `tienda/.env.production.local` con las variables cargadas en el panel de Netlify.
+
 Variables requeridas para producción:
 
 | Variable | Valor ejemplo | Descripción |
 |---|---|---|
-| `VITE_API_URL` | `https://api.tudominio.com` | URL pública del backend StockFlow |
+| `VITE_API_URL` | `https://stockflowbackend-production-cb53.up.railway.app` | URL pública del backend StockFlow |
 | `VITE_STORE_NAME` | `Mi Tienda` | Nombre que aparece en el nav |
 | `VITE_GOOGLE_CLIENT_ID` | `123...apps.googleusercontent.com` | OAuth Google (opcional) |
 | `VITE_STRIPE_PUBLIC_KEY` | `pk_live_...` | Clave pública Stripe (opcional) |
@@ -67,6 +69,8 @@ git push
 
 ## Paso 4 — Crear el sitio en Netlify
 
+Importante en este monorepo: existe otro `netlify.toml` en `c:\stockflow\` para el proyecto `frontend`. Para desplegar **tienda**, en Netlify debés configurar la base en `tienda` para que tome `c:\stockflow\tienda\netlify.toml`.
+
 ### Opción A: desde la interfaz web (recomendado para primera vez)
 
 1. Ir a **netlify.com → Add new site → Import an existing project**
@@ -81,7 +85,9 @@ git push
 
 4. Ir a **Site configuration → Environment variables** y agregar todas las variables del Paso 1.
 
-5. Hacer clic en **Deploy site**.
+5. El deploy valida que `VITE_API_URL` exista; si falta, el build falla para evitar publicar una tienda sin backend.
+
+6. Hacer clic en **Deploy site**.
 
 ### Opción B: con Netlify CLI
 

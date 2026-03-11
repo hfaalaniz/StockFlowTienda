@@ -1,11 +1,10 @@
 [build]
-  # Si conectás Netlify directo a la carpeta tienda/ como raíz del repo,
-  # usá solo estas dos líneas (sin "base"):
   publish = "dist"
-  command = "npm run build"
+  command = "node scripts/prepare-netlify-env.mjs && npm run build"
 
 [build.environment]
   NODE_VERSION = "20"
+  NPM_FLAGS = "--no-audit --no-fund"
 
 # SPA fallback: rutas desconocidas → index.html (necesario para React Router)
 [[redirects]]
