@@ -5,6 +5,7 @@
 [build.environment]
   NODE_VERSION = "20"
   NPM_FLAGS = "--no-audit --no-fund"
+  VITE_API_URL = "https://stockflowbackend-production-cb53.up.railway.app"
 
 # SPA fallback: rutas desconocidas → index.html (necesario para React Router)
 [[redirects]]

@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const isNetlify = Boolean(process.env.NETLIFY)
+const defaultApiUrl = 'https://stockflowbackend-production-cb53.up.railway.app'
 
 if (!isNetlify) {
   console.log('[env] NETLIFY no detectado, se omite preparacion de .env.production.local')
@@ -16,6 +17,11 @@ const optional = [
   'VITE_TRANSFER_CBU',
   'VITE_TRANSFER_ALIAS',
 ]
+
+if (!process.env.VITE_API_URL || String(process.env.VITE_API_URL).trim() === '') {
+  process.env.VITE_API_URL = defaultApiUrl
+  console.warn(`[env] VITE_API_URL no estaba definida. Se usa fallback: ${defaultApiUrl}`)
+}
 
 const missing = required.filter((key) => !process.env[key] || String(process.env[key]).trim() === '')
 
