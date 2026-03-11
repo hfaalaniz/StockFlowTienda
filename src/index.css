@@ -1,5 +1,5 @@
-@import url('../../mi-framework/variables.css');
-@import url('../../mi-framework/utilities.css');
+@import url('./styles/framework-variables.css');
+@import url('./styles/framework-utilities.css');
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 @tailwind base;
 @tailwind components;
