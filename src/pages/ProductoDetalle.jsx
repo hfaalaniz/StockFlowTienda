@@ -366,7 +366,27 @@ export default function ProductoDetalle() {
           )}
 
           <div className="pt-2">
-            <p className="text-4xl font-bold text-gray-900">{fmt(producto.precio)}</p>
+            {producto.precio_oferta ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <p className="text-4xl font-bold" style={{ color: '#16a34a' }}>{fmt(producto.precio_oferta)}</p>
+                  {producto.descuento_pct && (
+                    <span style={{
+                      fontSize: 14, fontWeight: 700, background: '#14532d',
+                      color: '#4ade80', borderRadius: 6, padding: '3px 10px',
+                    }}>-{producto.descuento_pct}% OFF</span>
+                  )}
+                </div>
+                <p className="text-lg text-gray-400 mt-1" style={{ textDecoration: 'line-through' }}>
+                  Antes: {fmt(producto.precio)}
+                </p>
+                {producto.campana_nombre && (
+                  <p className="text-sm mt-1" style={{ color: '#4ade80' }}>🏷 {producto.campana_nombre}</p>
+                )}
+              </>
+            ) : (
+              <p className="text-4xl font-bold text-gray-900">{fmt(producto.precio)}</p>
+            )}
             {producto.alicuota_iva > 0 && (
               <p className="text-sm text-gray-400 mt-1">+ {producto.alicuota_iva}% IVA incluido</p>
             )}

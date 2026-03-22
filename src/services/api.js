@@ -14,7 +14,14 @@ const baseURL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api/tienda`
   : '/api/tienda'
 
-const api = axios.create({ baseURL, timeout: 15000 })
+const api = axios.create({
+  baseURL,
+  timeout: 15000,
+  headers: {
+    'Accept': 'application/json; charset=utf-8',
+    'Content-Type': 'application/json; charset=utf-8',
+  },
+})
 
 // Interceptor: adjuntar token JWT del cliente
 api.interceptors.request.use((config) => {

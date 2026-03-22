@@ -56,7 +56,25 @@ export default function ProductoCard({ producto }) {
 
         <div className="flex items-center justify-between mt-2.5 gap-2">
           <div>
-            <p className="text-lg font-bold" style={{ color: 'var(--text)' }}>{fmt(producto.precio)}</p>
+            {producto.precio_oferta ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <p className="text-lg font-bold" style={{ color: '#16a34a' }}>{fmt(producto.precio_oferta)}</p>
+                  {producto.descuento_pct && (
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, background: '#14532d',
+                      color: '#4ade80', borderRadius: 4, padding: '1px 6px',
+                    }}>-{producto.descuento_pct}%</span>
+                  )}
+                </div>
+                <p className="text-xs" style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>{fmt(producto.precio)}</p>
+                {producto.campana_nombre && (
+                  <p className="text-xs" style={{ color: '#4ade80' }}>🏷 {producto.campana_nombre}</p>
+                )}
+              </>
+            ) : (
+              <p className="text-lg font-bold" style={{ color: 'var(--text)' }}>{fmt(producto.precio)}</p>
+            )}
             {producto.stock <= 5 && producto.stock > 0 && (
               <p className="text-xs font-medium" style={{ color: 'var(--warning)' }}>¡Últimas {producto.stock} unidades!</p>
             )}
