@@ -45,10 +45,10 @@ api.interceptors.response.use(
 
 // ─── Catálogo (público) ──────────────────────────────────────────────────────
 export const catalogoApi = {
+  getEspecificaciones: (id) => api.get(`/productos/${id}/especificaciones`),
+  calcularEnvio: (cp) => api.get('/envio/calcular', { params: { cp } }),
   listarProductos: (params = {}) => api.get('/productos', {
     params: {
-      // Evita recortes por defaults de backend y permite override por pantalla.
-      solo_activos: 'false',
       con_stock: 'false',
       ...params,
     },

@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useTheme } from '../context/ThemeContext'
 import CarritoDrawer from './CarritoDrawer'
 import ThemeSwitcher from './ThemeSwitcher'
+
+function useDebounce(fn, delay) {
+  const timer = useRef(null)
+  return useCallback((...args) => {
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => fn(...args), delay)
+  }, [fn, delay])
+}
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -13,9 +21,24 @@ export default function Navbar() {
   const [search, setSearch] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const handleSearch = (e) => {
+  const doSearch = useCallback((value) => {
+    if (value.trim()) {
+      navigate(`/catalogo?search=${encodeURIComponent(value.trim())}`)
+    } else {
+      navigate('/catalogo')
+    }
+  }, [navigate])
+
+  const debouncedSearch = useDebounce(doSearch, 350)
+
+  const handleChange = (e) => {
+    setSearch(e.target.value)
+    debouncedSearch(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
     e.preventDefault()
-    if (search.trim()) navigate(`/catalogo?search=${encodeURIComponent(search.trim())}`)
+    doSearch(search)
   }
 
   return (
@@ -37,16 +60,30 @@ export default function Navbar() {
           </Link>
 
           {/* Búsqueda */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-lg">
+          <form onSubmit={handleSubmit} className="flex-1 max-w-lg">
             <div className="relative">
               <input
                 type="text"
                 value={search}
-                onChange={e => setSearch(e.target.value)}
+                onChange={handleChange}
                 placeholder="Buscar productos..."
-                className="w-full pl-4 pr-10 py-2 text-sm rounded-full transition form-input"
-                style={{ borderRadius: '9999px' }}
+                className="w-full pl-4 py-2 text-sm rounded-full transition form-input"
+                style={{ borderRadius: '9999px', paddingRight: search ? '4rem' : '2.5rem' }}
               />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => { setSearch(''); navigate('/catalogo') }}
+                  className="absolute top-1/2 -translate-y-1/2 transition"
+                  style={{ right: '2.25rem', color: 'var(--muted)' }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
               <button
                 type="submit"
                 className="absolute right-3 top-1/2 -translate-y-1/2 transition"

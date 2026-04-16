@@ -17,7 +17,7 @@ export default function Catalogo() {
   const { data: resp, loading } = useFetch(
     () => catalogoApi.listarProductos({ search, categoria_id: categoriaId || undefined, page, limit: 24 }),
     [search, categoriaId, page],
-    { initialData: null, showError: false }
+    { initialData: null, showError: false, pollInterval: 30000 }
   )
   const productos = Array.isArray(resp) ? resp : (resp?.data ?? [])
   const total = resp?.total ?? 0

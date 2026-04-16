@@ -12,7 +12,7 @@ export default function Inicio() {
   const { data: productosResp, loading } = useFetch(
     () => catalogoApi.listarProductos({ limit: 8, page: 1 }),
     [],
-    { initialData: null, showError: false }
+    { initialData: null, showError: false, pollInterval: 30000 }
   )
   const productos = Array.isArray(productosResp) ? productosResp : (productosResp?.data ?? [])
 

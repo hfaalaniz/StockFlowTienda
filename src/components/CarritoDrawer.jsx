@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 
@@ -5,6 +6,11 @@ const fmt = (n) => new Intl.NumberFormat('es-AR', { style: 'currency', currency:
 
 export default function CarritoDrawer({ open, onClose }) {
   const { items, total, quitar, cambiarCantidad } = useCart()
+  const [busqueda, setBusqueda] = useState('')
+
+  const itemsFiltrados = busqueda.trim()
+    ? items.filter(i => i.nombre.toLowerCase().includes(busqueda.trim().toLowerCase()))
+    : items
 
   return (
     <>
@@ -20,26 +26,69 @@ export default function CarritoDrawer({ open, onClose }) {
         style={{ background: 'var(--surface)', borderLeft: '1px solid var(--border)' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-          <div>
-            <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Carrito de compras</h2>
-            {items.length > 0 && (
-              <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
-                {items.length} {items.length === 1 ? 'producto' : 'productos'}
-              </p>
-            )}
+        <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Carrito de compras</h2>
+              {items.length > 0 && (
+                <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
+                  {items.length} {items.length === 1 ? 'producto' : 'productos'}
+                </p>
+              )}
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg transition"
+              style={{ color: 'var(--muted)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg transition"
-            style={{ color: 'var(--muted)' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+
+          {/* Búsqueda en tiempo real */}
+          {items.length > 1 && (
+            <div className="relative">
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                style={{ color: 'var(--muted)' }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={busqueda}
+                onChange={e => setBusqueda(e.target.value)}
+                placeholder="Buscar en el carrito..."
+                className="w-full text-sm rounded-lg"
+                style={{
+                  padding: '7px 30px 7px 30px',
+                  background: 'var(--surface2)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  outline: 'none',
+                }}
+                onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              />
+              {busqueda && (
+                <button
+                  type="button"
+                  onClick={() => setBusqueda('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Items */}
@@ -63,8 +112,20 @@ export default function CarritoDrawer({ open, onClose }) {
                 Ver catálogo
               </button>
             </div>
+          ) : itemsFiltrados.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center px-5">
+              <svg className="w-10 h-10 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--border)' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <p className="text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                Sin resultados para <strong style={{ color: 'var(--text)' }}>"{busqueda}"</strong>
+              </p>
+              <button onClick={() => setBusqueda('')} className="text-xs mt-2 hover:underline" style={{ color: 'var(--accent)' }}>
+                Limpiar búsqueda
+              </button>
+            </div>
           ) : (
-            items.map(item => (
+            itemsFiltrados.map(item => (
               <div
                 key={item.id}
                 className="flex gap-0 mx-3 mb-3 rounded-xl overflow-hidden"
