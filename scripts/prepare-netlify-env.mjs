@@ -2,12 +2,16 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const isNetlify = Boolean(process.env.NETLIFY)
+const isCloudflare = Boolean(process.env.CF_PAGES)
 const defaultApiUrl = 'https://stockflowbackend-production-cb53.up.railway.app'
 
-if (!isNetlify) {
-  console.log('[env] NETLIFY no detectado, se omite preparacion de .env.production.local')
+if (!isNetlify && !isCloudflare) {
+  console.log('[env] Ni Netlify ni Cloudflare Pages detectados, se omite preparacion de .env.production.local')
   process.exit(0)
 }
+
+const platform = isCloudflare ? 'Cloudflare Pages' : 'Netlify'
+console.log(`[env] Plataforma detectada: ${platform}`)
 
 const required = ['VITE_API_URL']
 const optional = [
@@ -26,7 +30,7 @@ if (!process.env.VITE_API_URL || String(process.env.VITE_API_URL).trim() === '')
 const missing = required.filter((key) => !process.env[key] || String(process.env[key]).trim() === '')
 
 if (missing.length > 0) {
-  console.error(`[env] Faltan variables requeridas en Netlify: ${missing.join(', ')}`)
+  console.error(`[env] Faltan variables requeridas en ${platform}: ${missing.join(', ')}`)
   process.exit(1)
 }
 

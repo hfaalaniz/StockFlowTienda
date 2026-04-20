@@ -1,0 +1,15 @@
+name = "stockflow-tienda"
+compatibility_date = "2024-01-01"
+
+[env.production]
+name = "stockflow-tienda"
+
+# Las variables VITE_* se configuran en el dashboard de Cloudflare Pages
+# Settings → Environment variables → Production
+# Variables requeridas:
+#   VITE_API_URL            = https://stockflowbackend-production-cb53.up.railway.app
+#   VITE_GOOGLE_CLIENT_ID   = (tu Google OAuth client ID)
+#   VITE_FACEBOOK_APP_ID    = (tu Facebook App ID)
+#   VITE_STRIPE_PUBLIC_KEY  = (tu Stripe public key)
+#   VITE_TRANSFER_CBU       = (CBU para transferencias)
+#   VITE_TRANSFER_ALIAS     = (Alias para transferencias)
