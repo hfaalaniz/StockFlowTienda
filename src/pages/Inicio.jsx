@@ -4,6 +4,8 @@ import { catalogoApi } from '../services/api'
 import { useFetch } from '../hooks/useApi'
 import ProductoCard from '../components/ProductoCard'
 
+import heroBg from '../assets/hero-bg.svg'
+
 export default function Inicio() {
   const navigate = useNavigate()
   const { data: catsRaw } = useFetch(() => catalogoApi.listarCategorias(), [], { initialData: [], showError: false })
@@ -18,26 +20,56 @@ export default function Inicio() {
 
   return (
     <main>
-      {/* Hero — fondo amarillo vivo, texto oscuro */}
-      <section className="hero-section py-20 px-4 relative overflow-hidden">
-        {/* Forma decorativa circular verde lima */}
+      {/* Hero */}
+      <section
+        className="hero-section py-20 px-4 relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
         <div className="hero-blob-1" />
         <div className="hero-blob-2" />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          {/* Chip badge */}
           <span className="hero-badge">
             🛍️ Más de 500 productos disponibles
           </span>
 
-          <h1 className="hero-title">
+          <h1
+            className="hero-title"
+            style={{ color: '#1a1a1a', textShadow: '0 1px 0 rgba(255,255,255,0.4)' }}
+          >
             Todo lo que necesitás,<br />
-            <span className="hero-highlight">al mejor precio</span>
+            <span
+              className="hero-highlight"
+              style={{
+                color: '#1a1a1a',
+                background: '#FFE600',
+                borderRadius: '6px',
+                padding: '0 10px',
+                display: 'inline-block',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
+              }}
+            >
+              al mejor precio
+            </span>
           </h1>
-          <p className="hero-subtitle">
+
+          <p
+            className="hero-subtitle"
+            style={{
+              color: '#2a2a2a',
+              fontWeight: 500,
+              textShadow: '0 1px 0 rgba(255,255,255,0.5)',
+            }}
+          >
             Encontrá los mejores productos con precios increíbles.<br />
             Entrega rápida y segura en todo el país.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/catalogo" className="btn btn-primary btn-lg">
               Ver catálogo completo
